@@ -5,13 +5,44 @@ import "fmt"
 func main() {
 	out("Starting subset generator\n")
 	s := []string { "1", "2", "3" }
+	
 	gray := generateGrayCode(3)
 	prettyPrint("gray", gray, true)
-	t := generateAllSubSets(s)
+	
+	t := generateAllSubsets(s)
 	prettyPrint2D("all subsets", t)
+	
+	ksub := generateKSubsets(s, 2)
+	prettyPrint2D("k: 2 subsets", ksub)
 }
 
-func generateAllSubSets(s []string) ([][]string) {
+// Convenience function to call subset with initial parameters
+func generateKSubsets(s []string, k int) ([][]string) {
+	return subset(s, k, []string {}, [][]string {}, 0, 0)
+}
+
+// r is the current subset that we are building
+// s is the original set that we pass in
+// t is the list of subsets that we are building
+// i keeps track of the number of elements
+// j keeps track of the length of the subset
+// k is the length of the subsets that we want to build
+func subset(s []string, k int, r []string, t [][]string, i int, j int) ([][]string) {
+	if j == k {
+		// Subset is complete
+		t = append(t, r)
+		return t
+	}
+	if i == len(s) {
+		// No more elements
+		return t
+	}
+	t = subset(s, k, r, t, i+1, j)
+	t = subset(s, k, append(r, s[i]), t, i+1, j+1)
+	return t
+}
+
+func generateAllSubsets(s []string) ([][]string) {
 	if len(s) == 0 {
 		return [][]string {}
 	}
@@ -85,7 +116,8 @@ func prettyPrint2D(title string,s [][]string) {
 	if len(s) == 0 {
 		out("[ ]\n")
 	} else {
-		out("[ %s", s[0])
+		out("[ ")
+		prettyPrint("", s[0], false)
 		for i:=1;i<len(s);i++ {
 			out(", ")
 			prettyPrint("", s[i], false)
