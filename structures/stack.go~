@@ -1,0 +1,79 @@
+package main
+
+import "fmt"
+
+type item struct {
+	data int
+	next *item
+}
+type stack struct {
+	count int
+	top *item
+}
+
+func main() {
+	s := initStack()
+	s.push(1)
+	s.push(2)
+	s.push(3)
+	// Should print in reverse order (3 2 1) since it is a stack
+	s.print()
+	s.pop()
+	s.print()
+	s.pop()
+	s.print()
+	s.pop()
+	s.print()
+}
+
+func (s *stack) push(data int) {
+	i := initItem(data)
+	i.next = s.top
+	s.top = i
+	s.count = s.count + 1
+}
+
+func (s *stack) pop() (*item) {
+	if s.count == 0 {
+		return nil
+	}
+	i := s.top
+	s.top = i.next
+	s.count = s.count - 1
+	return i
+}
+
+// Output each item in the stack
+func (s *stack) print() {
+	if s.count == 0 {
+		out("stack is empty\n")
+		return
+	}
+	i := s.top
+	for count := 0; i != nil && count < s.count; count++ {
+		out("%d ", i.data)
+		i = i.next
+	}
+	out("\n")
+}
+
+// Create and return a stack
+func initStack() (*stack) {
+	s := new(stack)
+	s.count = 0
+	s.top = nil
+	return s
+}
+
+// Create and return an item using the provided data
+func initItem(data int) (*item) {
+	i := new(item)
+	i.data = data
+	i.next = nil
+	return i
+}
+
+// Shorthand function for fmt.Printf
+func out(format string, v...interface{}) {
+	fmt.Printf(format, v...)
+}
