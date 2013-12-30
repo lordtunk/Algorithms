@@ -1,9 +1,0 @@
-package main
-
-import (
-	"./structures/queue"
-)
-
-func main() {
-	q := structures.initQueue()
-}
